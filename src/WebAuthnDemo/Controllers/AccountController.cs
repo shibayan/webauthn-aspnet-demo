@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -44,6 +45,11 @@ namespace WebAuthnDemo.Controllers
         public IActionResult Login(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+
+            var challenge = Guid.NewGuid().ToString();
+            ViewData["Challenge"] = challenge;
+            HttpContext.Session.SetString("Challenge", challenge);
+
             return View();
         }
 
@@ -135,6 +141,37 @@ namespace WebAuthnDemo.Controllers
             await _signInManager.SignOutAsync();
             _logger.LogInformation(4, "User logged out.");
             return RedirectToAction(nameof(HomeController.Index), "Home");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> WindowsHello(WindowsHelloViewModel model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            var user = await _userManager.FindByIdAsync(model.UserId);
+
+            if (user?.PublicKey == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+            
+            var authenticator = new FidoAuthenticator(user.PublicKey, HttpContext.Session.GetString("Challenge"));
+
+            if (!authenticator.ValidateSignature(model.Signature, model.AuthenticatorData, model.ClientData))
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            await _signInManager.SignInAsync(user, false);
+
+            return RedirectToLocal(returnUrl);
         }
 
         //

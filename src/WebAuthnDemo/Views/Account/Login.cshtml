@@ -83,10 +83,43 @@
                     </form>
                 }
             }
+
+            <hr />
+
+            <form id="windowshello-form" asp-controller="Account" asp-action="WindowsHello" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+                <input type="hidden" id="userId" name="UserId" />
+                <input type="hidden" id="signature" name="Signature" />
+                <input type="hidden" id="authenticatorData" name="AuthenticatorData" />
+                <input type="hidden" id="clientData" name="ClientData" />
+                <div>
+                    <p>
+                        <button id="windowshello" type="button" class="btn btn-default" title="Log in using your Windows Hello account">Windows Hello</button>
+                    </p>
+                </div>
+            </form>
         </section>
     </div>
 </div>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        $(function() {
+            $("#windowshello").on("click", function () {
+                var options = {
+                    timeoutSeconds: 60
+                };
+
+                navigator.authentication.getAssertion("@ViewData["Challenge"]", options)
+                    .then(function (result) {
+                        $("#userId").val(result.credential.id);
+                        $("#signature").val(result.signature);
+                        $("#authenticatorData").val(result.authenticatorData);
+                        $("#clientData").val(result.clientData);
+
+                        $("#windowshello-form").submit();
+                    });
+            });
+        })
+    </script>
 }

@@ -49,6 +49,12 @@ namespace WebAuthnDemo
 
             services.AddMvc();
 
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(60);
+                options.CookieHttpOnly = true;
+            });
+
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
@@ -70,6 +76,8 @@ namespace WebAuthnDemo
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseSession();
 
             app.UseStaticFiles();
 

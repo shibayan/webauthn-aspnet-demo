@@ -1,0 +1,47 @@
+﻿@model AddPublicKeyViewModel
+@{
+    ViewData["Title"] = "Setup Windows Hello";
+}
+
+@inject UserManager<ApplicationUser> UserManager
+
+<h2>@ViewData["Title"].</h2>
+<form asp-controller="Manage" asp-action="AddPublicKey" method="post" class="form-horizontal">
+    <h4>Add a Public Key.</h4>
+    <hr />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" id="publickey" name="PublicKey" />
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button id="make" type="button" class="btn btn-default">Make Credential</button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        $(function () {
+            var accountInfo = {
+                rpDisplayName: 'WebAuthnDemo',
+                displayName: '@UserManager.GetUserName(User)',
+                id: '@UserManager.GetUserId(User)'
+            };
+
+            var cryptoParameters = [
+                {
+                    type: 'ScopedCred',
+                    algorithm: 'RSASSA-PKCS1-v1_5'
+                }
+            ];
+
+            $("#make").on("click", function () {
+                navigator.authentication.makeCredential(accountInfo, cryptoParameters)
+                    .then(function (result) {
+                        $("#publickey").val(JSON.stringify(result.publicKey));
+
+                        $("form").submit();
+                    });
+            });
+        })
+    </script>
+}

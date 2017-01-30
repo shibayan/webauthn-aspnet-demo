@@ -114,6 +114,38 @@ namespace WebAuthnDemo.Controllers
         }
 
         //
+        // GET: /Manage/AddPublicKey
+        public IActionResult AddPublicKey()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Manage/AddPublicKey
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddPublicKey(AddPublicKeyViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await GetCurrentUserAsync();
+
+            if (user == null)
+            {
+                return View("Error");
+            }
+
+            user.PublicKey = model.PublicKey;
+
+            await _userManager.UpdateAsync(user);
+
+            return RedirectToAction(nameof(Index), "Manage");
+        }
+
+        //
         // POST: /Manage/EnableTwoFactorAuthentication
         [HttpPost]
         [ValidateAntiForgeryToken]
