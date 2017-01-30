@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EE4B7FB4-9F8A-4FE5-ACBD-878E49C6FF44}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8F617E4F-1ABF-4178-AC15-98C6624CBA5D}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WebAuthnDemo", "src\WebAuthnDemo\WebAuthnDemo.xproj", "{AFA4EA43-2220-47F4-8A8D-830A4EE564C4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AFA4EA43-2220-47F4-8A8D-830A4EE564C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFA4EA43-2220-47F4-8A8D-830A4EE564C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFA4EA43-2220-47F4-8A8D-830A4EE564C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFA4EA43-2220-47F4-8A8D-830A4EE564C4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AFA4EA43-2220-47F4-8A8D-830A4EE564C4} = {EE4B7FB4-9F8A-4FE5-ACBD-878E49C6FF44}
+	EndGlobalSection
+EndGlobal
